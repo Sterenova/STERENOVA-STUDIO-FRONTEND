@@ -13,7 +13,6 @@ import {
   Download, 
   FileText, 
   Calendar, 
-  BarChart3, 
   Trash2, 
   RefreshCw,
   FileImage,

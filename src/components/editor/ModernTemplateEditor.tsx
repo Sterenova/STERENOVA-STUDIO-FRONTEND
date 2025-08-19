@@ -311,69 +311,84 @@ export function ModernTemplateEditor({ template }: ModernTemplateEditorProps) {
   return (
     <div className="h-full flex flex-col bg-background">
       {/* Header */}
-      <div className="flex-shrink-0 p-6 border-b border-border">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-foreground">{template.displayName}</h1>
-            <p className="text-muted-foreground mt-1">{template.description}</p>
-          </div>
-          
-          <div className="flex items-center space-x-2">
-            {/* Bouton Favoris */}
-            {isFavorite ? (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleRemoveFromFavorites}
-                className="text-red-500 border-red-500 hover:bg-red-50 hover:text-red-600"
-              >
-                <Heart className="w-4 h-4 mr-2 fill-current" />
-                Retirer des Favoris
-              </Button>
-            ) : (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setIsAddToFavoritesOpen(true)}
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Ajouter aux Favoris
-              </Button>
-            )}
+      <div className="flex-shrink-0 p-4 pb-2">
+        <Card>
+          <CardContent>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="w-12 h-12 bg-gradient-sterenova rounded-lg flex items-center justify-center text-white shadow-sm">
+                  {template.category === 'post' ? <Square className="h-6 w-6" /> : <Star className="h-6 w-6" />}
+                </div>
+                <div>
+                  <h1 className="text-2xl font-bold text-foreground">{template.displayName}</h1>
+                  <p className="text-muted-foreground mt-1">{template.description}</p>
+                </div>
+              </div>
+              
+              <div className="flex items-center space-x-2">
+                {/* Bouton Favoris */}
+                {isFavorite ? (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleRemoveFromFavorites}
+                    className="text-red-500 border-red-500 hover:bg-red-50 hover:text-red-600"
+                  >
+                    <Heart className="w-4 h-4 mr-2 fill-current" />
+                    Retirer des Favoris
+                  </Button>
+                ) : (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setIsAddToFavoritesOpen(true)}
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Ajouter aux Favoris
+                  </Button>
+                )}
+                
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowPreview(!showPreview)}
+                >
+                  {showPreview ? <EyeOff className="w-4 h-4 mr-2" /> : <Eye className="w-4 h-4 mr-2" />}
+                  {showPreview ? 'Masquer' : 'Afficher'}
+                </Button>
+              </div>
+            </div>
             
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setShowPreview(!showPreview)}
-            >
-              {showPreview ? <EyeOff className="w-4 h-4 mr-2" /> : <Eye className="w-4 h-4 mr-2" />}
-              {showPreview ? 'Masquer' : 'Afficher'}
-            </Button>
-          </div>
-        </div>
-        
-        <div className="flex items-center space-x-4 mt-4">
-          <Badge variant="outline" className="flex items-center space-x-1">
-            {template.category === 'post' ? <Square className="w-3 h-3" /> : <Star className="w-3 h-3" />}
-            <span>{template.category}</span>
-          </Badge>
-          <Badge variant="outline">
-            {template.dimensions.width}×{template.dimensions.height}
-          </Badge>
-          <Badge variant="outline">
-            {template.placeholders.length} champs
-          </Badge>
-        </div>
+            <div className="flex items-center space-x-4 mt-4">
+              <Badge variant="outline" className="flex items-center space-x-1">
+                {template.category === 'post' ? <Square className="w-3 h-3" /> : <Star className="w-3 h-3" />}
+                <span>{template.category}</span>
+              </Badge>
+              <Badge variant="outline">
+                {template.dimensions.width}×{template.dimensions.height}
+              </Badge>
+              <Badge variant="outline">
+                {template.placeholders.length} champs
+              </Badge>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Content */}
       <div className="flex-1 flex overflow-hidden">
         {/* Left Panel - Form */}
-        <div className="w-96 border-r border-border p-6 overflow-y-auto">
-          <div className="space-y-6">
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Paramètres du Template</h3>
-              <div className="space-y-4">
+        <div className="w-96 p-4 overflow-y-auto">
+          <div className="space-y-4">
+            {/* Paramètres du Template Card */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Settings className="w-5 h-5" />
+                  <span>Paramètres du Template</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
                 {template.placeholders.map((placeholder) => (
                   <div key={placeholder.key} className="space-y-2">
                     <Label htmlFor={placeholder.key} className="flex items-center justify-between">
@@ -396,47 +411,54 @@ export function ModernTemplateEditor({ template }: ModernTemplateEditorProps) {
                     )}
                   </div>
                 ))}
-              </div>
-            </div>
+              </CardContent>
+            </Card>
 
-            <Separator />
-
-            <div className="space-y-3">
-              <Button
-                onClick={() => generateTemplateWithData(formData)}
-                disabled={isGenerating || Object.keys(formData).length < template.placeholders.length}
-                className="w-full"
-              >
-                {isGenerating ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Génération...
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="w-4 h-4 mr-2" />
-                    Générer le Template
-                  </>
-                )}
-              </Button>
-              
-              <Button
-                variant="outline"
-                onClick={handleReset}
-                className="w-full"
-              >
-                <RefreshCw className="w-4 h-4 mr-2" />
-                Réinitialiser
-              </Button>
-            </div>
+            {/* Actions Card */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Zap className="w-5 h-5" />
+                  <span>Actions</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <Button
+                  onClick={() => generateTemplateWithData(formData)}
+                  disabled={isGenerating || Object.keys(formData).length < template.placeholders.length}
+                  className="w-full"
+                >
+                  {isGenerating ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Génération...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-4 h-4 mr-2" />
+                      Générer le Template
+                    </>
+                  )}
+                </Button>
+                
+                <Button
+                  variant="outline"
+                  onClick={handleReset}
+                  className="w-full"
+                >
+                  <RefreshCw className="w-4 h-4 mr-2" />
+                  Réinitialiser
+                </Button>
+              </CardContent>
+            </Card>
           </div>
         </div>
 
         {/* Right Panel - Preview */}
         {showPreview && (
-          <div className="flex-1 p-6 overflow-y-auto">
-            <div className="space-y-6">
-              {/* Preview Card */}
+          <div className="flex-1 p-4 overflow-y-auto">
+            <div className="space-y-4">
+              {/* Prévisualisation Card */}
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center justify-between">
@@ -452,9 +474,6 @@ export function ModernTemplateEditor({ template }: ModernTemplateEditorProps) {
                       </Button>
                     </div>
                   </CardTitle>
-                  <div className="text-sm text-muted-foreground">
-                    Dimensions: {template.dimensions.width} × {template.dimensions.height}px
-                  </div>
                 </CardHeader>
                 <CardContent>
                   {generatedSvg ? (
@@ -493,12 +512,6 @@ export function ModernTemplateEditor({ template }: ModernTemplateEditorProps) {
                             <span>JPEG</span>
                           </Button>
                         </div>
-                        <div className="flex items-center space-x-2">
-                          <Button variant="outline" onClick={handleCopySvg} size="sm">
-                            <Copy className="w-4 h-4 mr-2" />
-                            Copier le Code
-                          </Button>
-                        </div>
                       </div>
                     </div>
                   ) : (
@@ -512,24 +525,104 @@ export function ModernTemplateEditor({ template }: ModernTemplateEditorProps) {
                 </CardContent>
               </Card>
 
-              {/* Code SVG */}
-              {generatedSvg && (
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center space-x-2">
-                      <Code className="w-5 h-5" />
-                      <span>Code SVG</span>
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="bg-muted p-4 rounded-lg overflow-x-auto">
-                      <pre className="text-sm text-muted-foreground whitespace-pre-wrap">
-                        {generatedSvg}
-                      </pre>
+              {/* Récapitulatif Card */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Info className="w-5 h-5" />
+                    <span>Récapitulatif</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {/* Informations générales */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-3">
+                        <h4 className="font-medium text-foreground">Informations générales</h4>
+                        <div className="space-y-2">
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Nom du template:</span>
+                            <span className="font-medium">{template.displayName}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Catégorie:</span>
+                            <Badge variant="outline" className="flex items-center space-x-1">
+                              {template.category === 'post' ? <Square className="w-3 h-3" /> : <Star className="w-3 h-3" />}
+                              <span>{template.category}</span>
+                            </Badge>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Dimensions:</span>
+                            <span className="font-medium">{template.dimensions.width} × {template.dimensions.height}px</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Nombre de champs:</span>
+                            <span className="font-medium">{template.placeholders.length}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="space-y-3">
+                        <h4 className="font-medium text-foreground">Description</h4>
+                        <p className="text-sm text-muted-foreground leading-relaxed">{template.description}</p>
+                        
+                        {template.tags && template.tags.length > 0 && (
+                          <div className="space-y-2">
+                            <h5 className="text-sm font-medium text-foreground">Tags:</h5>
+                            <div className="flex flex-wrap gap-1">
+                              {template.tags.map((tag, index) => (
+                                <Badge key={index} variant="secondary" className="text-xs">
+                                  {tag}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </CardContent>
-                </Card>
-              )}
+
+                    {/* Paramètres actuels */}
+                    <div className="space-y-3">
+                      <h4 className="font-medium text-foreground">Paramètres actuels</h4>
+                      <div className="bg-muted/50 rounded-lg p-3">
+                        {Object.keys(formData).length > 0 ? (
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                            {Object.entries(formData).map(([key, value]) => (
+                              <div key={key} className="flex justify-between text-sm">
+                                <span className="text-muted-foreground font-medium">{key}:</span>
+                                <span className="font-mono bg-background px-2 py-1 rounded text-xs">{value || 'Non défini'}</span>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <p className="text-sm text-muted-foreground text-center py-2">
+                            Aucun paramètre défini
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Statistiques d'utilisation */}
+                    <div className="space-y-3">
+                      <h4 className="font-medium text-foreground">Statistiques</h4>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="text-center p-3 bg-primary/5 rounded-lg border border-primary/20">
+                          <div className="text-2xl font-bold text-primary">
+                            {template.placeholders.length}
+                          </div>
+                          <div className="text-xs text-muted-foreground">Champs requis</div>
+                        </div>
+                        <div className="text-center p-3 bg-secondary/5 rounded-lg border border-secondary/20">
+                          <div className="text-2xl font-bold text-secondary">
+                            {template.dimensions.width}×{template.dimensions.height}
+                          </div>
+                          <div className="text-xs text-muted-foreground">Dimensions</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </div>
         )}
@@ -574,12 +667,6 @@ export function ModernTemplateEditor({ template }: ModernTemplateEditorProps) {
                   <Button onClick={handleDownloadJpeg} variant="outline" size="sm">
                     <Download className="w-4 h-4 mr-2" />
                     JPEG
-                  </Button>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Button variant="outline" onClick={handleCopySvg} size="sm">
-                    <Copy className="w-4 h-4 mr-2" />
-                    Copier le Code
                   </Button>
                 </div>
               </div>

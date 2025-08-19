@@ -17,7 +17,8 @@ import {
   Bell,
   User,
   Sun,
-  Moon
+  Moon,
+  Home
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
@@ -90,8 +91,19 @@ export function ModernHeader({ onMenuToggle, isMenuOpen }: ModernHeaderProps) {
                     size="sm" 
                     className={isActive('/') ? '' : 'text-muted-foreground hover:text-foreground'}
                   >
-                    <Sparkles className="h-4 w-4 mr-2" />
+                    <Home className="h-4 w-4 mr-2" />
                     Accueil
+                  </Button>
+                </Link>
+           
+                <Link href="/editor">
+                  <Button 
+                    variant={isActive('/editor') ? 'default' : 'ghost'} 
+                    size="sm" 
+                    className={isActive('/editor') ? '' : 'text-muted-foreground hover:text-foreground'}
+                  >
+                    <Sparkles className="h-4 w-4 mr-2" />
+                    Éditeur
                   </Button>
                 </Link>
                 
@@ -234,6 +246,17 @@ export function ModernHeader({ onMenuToggle, isMenuOpen }: ModernHeaderProps) {
                 >
                   <Settings className="h-4 w-4 mr-2" />
                   Paramètres
+                </Button>
+              </Link>
+              
+              <Link href="/editor" onClick={closeMobileNav}>
+                <Button 
+                  variant={isActive('/editor') ? 'default' : 'ghost'} 
+                  size="sm" 
+                  className="w-full justify-start"
+                >
+                  <Sparkles className="h-4 w-4 mr-2" />
+                  Éditeur
                 </Button>
               </Link>
             </nav>
