@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+
 import { Textarea } from '@/components/ui/textarea';
 import {
   Download,
@@ -462,7 +462,10 @@ export function ModernTemplateEditor({ template }: ModernTemplateEditorProps) {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center justify-between">
-                    <span>Prévisualisation</span>
+                    <div className="flex items-center space-x-2">
+                      <Eye className="w-5 h-5 mr-2" />
+                      <span>Prévisualisation</span>
+                    </div>
                     <div className="flex items-center space-x-2">
                       <Button
                         variant="outline"
@@ -628,16 +631,20 @@ export function ModernTemplateEditor({ template }: ModernTemplateEditorProps) {
         )}
       </div>
 
-      {/* Modal de prévisualisation agrandie */}
-      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-4xl">
-          <DialogHeader>
-            <DialogTitle>Prévisualisation - {template.displayName}</DialogTitle>
-          </DialogHeader>
-          {generatedSvg && (
-            <div className="flex flex-col items-center space-y-4">
+      {/* Prévisualisation agrandie avec fond flouté */}
+      {isModalOpen && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          onClick={() => setIsModalOpen(false)}
+        >
+          {/* Fond flouté */}
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+          
+          {/* Contenu centré */}
+          <div className="relative z-10 flex flex-col items-center space-y-4">
+            {generatedSvg && (
               <div
-                className="border border-border rounded-lg overflow-hidden bg-white"
+                className="border border-border rounded-lg overflow-hidden bg-white shadow-2xl"
                 style={{
                   width: modalSize.width,
                   height: modalSize.height
@@ -654,67 +661,103 @@ export function ModernTemplateEditor({ template }: ModernTemplateEditorProps) {
                   }}
                 />
               </div>
-              <div className="flex flex-col space-y-3">
-                <div className="flex items-center space-x-2">
-                  <Button onClick={handleDownload} size="sm">
-                    <Download className="w-4 h-4 mr-2" />
-                    SVG
-                  </Button>
-                  <Button onClick={handleDownloadPng} variant="outline" size="sm">
-                    <Download className="w-4 h-4 mr-2" />
-                    PNG
-                  </Button>
-                  <Button onClick={handleDownloadJpeg} variant="outline" size="sm">
-                    <Download className="w-4 h-4 mr-2" />
-                    JPEG
-                  </Button>
+            )}
+            
+            {/* Boutons de téléchargement */}
+            <div className="flex flex-col space-y-3">
+              <div className="flex items-center space-x-2">
+                <Button onClick={handleDownload} size="sm">
+                  <Download className="w-4 h-4 mr-2" />
+                  SVG
+                </Button>
+                <Button onClick={handleDownloadPng} variant="outline" size="sm">
+                  <Download className="w-4 h-4 mr-2" />
+                  PNG
+                </Button>
+                <Button onClick={handleDownloadJpeg} variant="outline" size="sm">
+                  <Download className="w-4 h-4 mr-2" />
+                  JPEG
+                </Button>
+              </div>
+              
+              {/* Bouton fermer */}
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => setIsModalOpen(false)}
+                className="mx-auto"
+              >
+                <X className="w-4 h-4 mr-2" />
+                Fermer
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal d'ajout aux favoris avec fond flouté */}
+      {isAddToFavoritesOpen && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          onClick={() => setIsAddToFavoritesOpen(false)}
+        >
+          {/* Fond flouté */}
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+          
+          {/* Contenu centré */}
+          <div 
+            className="relative z-10 bg-background border border-border rounded-lg p-6 w-full max-w-md shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold">Ajouter aux Favoris</h3>
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  onClick={() => setIsAddToFavoritesOpen(false)}
+                  className="h-8 w-8 p-0"
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+              
+              <div>
+                <Label htmlFor="favorite-notes">Notes (optionnel)</Label>
+                <Textarea
+                  id="favorite-notes"
+                  placeholder="Ajoutez des notes personnelles sur ce template..."
+                  value={favoriteNotes}
+                  onChange={(e) => setFavoriteNotes(e.target.value)}
+                  rows={3}
+                />
+              </div>
+              
+              <div className="text-sm text-muted-foreground">
+                <p>Ce template sera ajouté à vos favoris avec les paramètres actuels :</p>
+                <div className="mt-2 space-y-1">
+                  {Object.entries(formData).map(([key, value]) => (
+                    <div key={key} className="flex justify-between">
+                      <span className="font-medium">{key}:</span>
+                      <span className="font-mono">{value}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
-          )}
-        </DialogContent>
-      </Dialog>
-
-      {/* Modal d'ajout aux favoris */}
-      <Dialog open={isAddToFavoritesOpen} onOpenChange={setIsAddToFavoritesOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Ajouter aux Favoris</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="favorite-notes">Notes (optionnel)</Label>
-              <Textarea
-                id="favorite-notes"
-                placeholder="Ajoutez des notes personnelles sur ce template..."
-                value={favoriteNotes}
-                onChange={(e) => setFavoriteNotes(e.target.value)}
-                rows={3}
-              />
-            </div>
-            <div className="text-sm text-muted-foreground">
-              <p>Ce template sera ajouté à vos favoris avec les paramètres actuels :</p>
-              <div className="mt-2 space-y-1">
-                {Object.entries(formData).map(([key, value]) => (
-                  <div key={key} className="flex justify-between">
-                    <span className="font-medium">{key}:</span>
-                    <span className="font-mono">{value}</span>
-                  </div>
-                ))}
-              </div>
+            
+            <div className="flex justify-end space-x-2 mt-6">
+              <Button variant="outline" onClick={() => setIsAddToFavoritesOpen(false)}>
+                Annuler
+              </Button>
+              <Button onClick={handleAddToFavorites}>
+                <Heart className="w-4 h-4 mr-2" />
+                Ajouter aux Favoris
+              </Button>
             </div>
           </div>
-          <div className="flex justify-end space-x-2">
-            <Button variant="outline" onClick={() => setIsAddToFavoritesOpen(false)}>
-              Annuler
-            </Button>
-            <Button onClick={handleAddToFavorites}>
-              <Heart className="w-4 h-4 mr-2" />
-              Ajouter aux Favoris
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+        </div>
+      )}
     </div>
   );
 } 

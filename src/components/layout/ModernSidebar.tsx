@@ -16,10 +16,11 @@ import { TemplateInfo } from '@/types/api';
 
 interface ModernSidebarProps {
   templates: TemplateInfo[];
+  selectedTemplate: TemplateInfo | null;
   onTemplateSelect: (template: TemplateInfo) => void;
 }
 
-export function ModernSidebar({ templates, onTemplateSelect }: ModernSidebarProps) {
+export function ModernSidebar({ templates, selectedTemplate, onTemplateSelect }: ModernSidebarProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTab, setSelectedTab] = useState('all');
 
@@ -114,11 +115,17 @@ export function ModernSidebar({ templates, onTemplateSelect }: ModernSidebarProp
               <Tooltip key={template.key}>
                 <TooltipTrigger asChild>
                   <div
-                    className="group relative p-4 rounded-lg border border-border bg-card hover:bg-accent/10 hover:border-accent/50 cursor-pointer transition-all duration-200 hover:shadow-md"
+                    className={`group relative p-4 rounded-lg border cursor-pointer transition-all duration-200 ${
+                      selectedTemplate?.key === template.key
+                        ? 'bg-accent/10 border-accent/50 shadow-md'
+                        : 'bg-card border-border hover:bg-accent/10 hover:border-accent/50 hover:shadow-md'
+                    }`}
                     onClick={() => onTemplateSelect(template)}
                   >
                     {/* Indicateur de sélection */}
-                    <div className="absolute inset-0 rounded-lg bg-gradient-sterenova opacity-0 group-hover:opacity-5 transition-opacity duration-200" />
+                    <div className={`absolute inset-0 rounded-lg bg-gradient-sterenova transition-opacity duration-200 ${
+                      selectedTemplate?.key === template.key ? 'opacity-5' : 'opacity-0 group-hover:opacity-5'
+                    }`} />
                     
                     <div className="relative flex items-start space-x-3">
                       <div className="w-10 h-10 bg-gradient-sterenova rounded-lg flex items-center justify-center flex-shrink-0 text-white shadow-sm">
@@ -127,7 +134,11 @@ export function ModernSidebar({ templates, onTemplateSelect }: ModernSidebarProp
                       
                       <div className="flex-1 min-w-0 space-y-2">
                         <div className="flex items-start justify-between">
-                          <h3 className="font-semibold text-foreground truncate group-hover:text-primary transition-colors">
+                          <h3 className={`font-semibold truncate transition-colors ${
+                            selectedTemplate?.key === template.key
+                              ? 'text-primary'
+                              : 'text-foreground group-hover:text-primary'
+                          }`}>
                             {template.displayName}
                           </h3>
                           <Badge 
@@ -159,7 +170,9 @@ export function ModernSidebar({ templates, onTemplateSelect }: ModernSidebarProp
                           </div>
                           
                           {/* Indicateur de hover */}
-                          <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                          <div className={`transition-opacity duration-200 ${
+                            selectedTemplate?.key === template.key ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+                          }`}>
                             <div className="w-2 h-2 bg-primary rounded-full" />
                           </div>
                         </div>
@@ -239,7 +252,7 @@ export function ModernSidebar({ templates, onTemplateSelect }: ModernSidebarProp
                 </div>
                 <h3 className="text-lg font-medium text-foreground mb-2">Aucun template trouvé</h3>
                 <p className="text-muted-foreground text-sm leading-relaxed">
-                  Essayez de modifier vos critères de recherche ou de changer d'onglet
+                  Essayez de modifier vos critères de recherche ou de changer d&apos;onglet
                 </p>
               </div>
             )}

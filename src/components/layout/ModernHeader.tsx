@@ -170,7 +170,7 @@ export function ModernHeader({ onMenuToggle, isMenuOpen }: ModernHeaderProps) {
               )}
               
               {/* Notifications */}
-              <Button variant="ghost" size="icon" className="relative">
+              {/* <Button variant="ghost" size="icon" className="relative">
                 <Bell className="h-5 w-5" />
                 <Badge 
                   variant="destructive" 
@@ -178,12 +178,12 @@ export function ModernHeader({ onMenuToggle, isMenuOpen }: ModernHeaderProps) {
                 >
                   3
                 </Badge>
-              </Button>
+              </Button> */}
 
               {/* User Menu */}
-              <Button variant="ghost" size="icon">
+              {/* <Button variant="ghost" size="icon">
                 <User className="h-5 w-5" />
-              </Button>
+              </Button> */}
             </div>
           </div>
         </div>

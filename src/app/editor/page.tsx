@@ -25,10 +25,7 @@ export default function EditorPage() {
         const response = await apiService.getTemplatesList();
         setTemplates(response.templates);
         
-        // Sélectionner le premier template par défaut
-        if (response.templates.length > 0 && !selectedTemplate) {
-          setSelectedTemplate(response.templates[0]);
-        }
+
       } catch (err) {
         console.error('Erreur lors du chargement des templates:', err);
         setError('Erreur lors du chargement des templates');
@@ -107,7 +104,11 @@ export default function EditorPage() {
       <div className="flex flex-1 overflow-hidden">
         {/* Desktop Sidebar */}
         <div className="hidden lg:block">
-          <ModernSidebar templates={templates} onTemplateSelect={handleTemplateSelect} />
+          <ModernSidebar 
+            templates={templates} 
+            selectedTemplate={selectedTemplate}
+            onTemplateSelect={handleTemplateSelect} 
+          />
         </div>
         
         {/* Mobile Sidebar Overlay */}
@@ -115,7 +116,11 @@ export default function EditorPage() {
           <div className="lg:hidden fixed inset-0 z-40">
             <div className="fixed inset-0 bg-black/50" onClick={() => setIsMobileMenuOpen(false)} />
             <div className="fixed left-0 top-16 h-full w-80 bg-card shadow-xl">
-              <ModernSidebar templates={templates} onTemplateSelect={handleTemplateSelect} />
+              <ModernSidebar 
+                templates={templates} 
+                selectedTemplate={selectedTemplate}
+                onTemplateSelect={handleTemplateSelect} 
+              />
             </div>
           </div>
         )}
@@ -132,7 +137,7 @@ export default function EditorPage() {
                   <CardHeader>
                     <CardTitle className="flex items-center justify-center space-x-2 text-3xl">
                       <Palette className="w-8 h-8 text-primary" />
-                      <span>Bienvenue dans l'Éditeur</span>
+                      <span>Bienvenue dans l&apos;Éditeur</span>
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
