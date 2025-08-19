@@ -2,19 +2,17 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { ModernSidebar } from '@/components/layout/ModernSidebar';
-import { ModernTemplateEditor } from '@/components/editor/ModernTemplateEditor';
-import { ModernHeader } from '@/components/layout/ModernHeader';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 import { TemplateInfo } from '@/types/api';
 import { apiService } from '@/services/api';
 import { Toaster } from 'sonner';
+import { ArrowRight, Sparkles, Palette, Download, Star, Menu } from 'lucide-react';
 
 export default function HomePage() {
   const [templates, setTemplates] = useState<TemplateInfo[]>([]);
-  const [selectedTemplate, setSelectedTemplate] = useState<TemplateInfo | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const fetchTemplates = async () => {
@@ -32,15 +30,6 @@ export default function HomePage() {
 
     fetchTemplates();
   }, []);
-
-  const handleTemplateSelect = (template: TemplateInfo) => {
-    setSelectedTemplate(template);
-    setIsMobileMenuOpen(false);
-  };
-
-  const handleMobileMenuToggle = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
 
   if (loading) {
     return (
@@ -74,106 +63,146 @@ export default function HomePage() {
     );
   }
 
+  const postTemplates = templates.filter(t => t.category === 'post');
+  const storyTemplates = templates.filter(t => t.category === 'story');
+
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background">
       <Toaster />
-      <ModernHeader
-        onMenuToggle={handleMobileMenuToggle}
-        isMenuOpen={isMobileMenuOpen}
-      />
       
-      <div className="flex flex-1 overflow-hidden">
-        {/* Desktop Sidebar */}
-        <div className="hidden lg:block">
-          <ModernSidebar templates={templates} onTemplateSelect={handleTemplateSelect} />
-        </div>
-        
-        {/* Mobile Sidebar Overlay */}
-        {isMobileMenuOpen && (
-          <div className="lg:hidden fixed inset-0 z-40">
-            <div className="fixed inset-0 bg-black/50" onClick={() => setIsMobileMenuOpen(false)} />
-            <div className="fixed left-0 top-16 h-full w-80 bg-card shadow-xl">
-              <ModernSidebar templates={templates} onTemplateSelect={handleTemplateSelect} />
+      {/* Header */}
+      <header className="border-b border-border bg-card/50 backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center space-x-4">
+              <Image src="/logo.svg" alt="Sterenova" width={32} height={32} />
+              <span className="text-xl font-bold text-foreground">Sterenova</span>
+            </div>
+            <div className="flex items-center space-x-4">
+              <Link href="/editor">
+                <Button size="sm">
+                  <Sparkles className="w-4 h-4 mr-2" />
+                  Commencer
+                </Button>
+              </Link>
             </div>
           </div>
-        )}
-        
-        {/* Main Content */}
-        <div className="flex-1 overflow-hidden">
-          {selectedTemplate ? (
-            <ModernTemplateEditor template={selectedTemplate} />
-          ) : (
-            <div className="h-full overflow-y-auto scrollbar-thin">
-              <div className="flex items-center justify-center min-h-full p-6">
-                <div className="text-center max-w-2xl mx-auto">
-                  <div className="w-32 h-32 flex items-center justify-center mx-auto mb-8">
-                    <Image src="/logo.svg" alt="Sterenova" width={128} height={128} />
-                  </div>
-                  
-                  <h2 className="text-4xl font-bold text-foreground mb-6">
-                    Bienvenue sur Sterenova
-                  </h2>
-                  
-                  <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-                    Créez des templates SVG professionnels en quelques clics.
-                    Sélectionnez un template dans la sidebar pour commencer votre création.
-                  </p>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <div className="text-center p-6 bg-card rounded-xl border border-border shadow-sm">
-                      <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <div className="text-2xl">📱</div>
-                      </div>
-                      <h3 className="text-lg font-semibold text-foreground mb-2">Posts Instagram</h3>
-                      <p className="text-muted-foreground text-sm">Templates carrés optimisés pour les réseaux sociaux</p>
-                      <div className="mt-3">
-                        <span className="text-2xl font-bold text-primary">
-                          {templates.filter(t => t.category === 'post').length}
-                        </span>
-                        <p className="text-sm text-muted-foreground">templates disponibles</p>
-                      </div>
-                    </div>
-                    
-                    <div className="text-center p-6 bg-card rounded-xl border border-border shadow-sm">
-                      <div className="w-16 h-16 bg-secondary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <div className="text-2xl">📖</div>
-                      </div>
-                      <h3 className="text-lg font-semibold text-foreground mb-2">Stories</h3>
-                      <p className="text-muted-foreground text-sm">Templates verticaux pour les stories et reels</p>
-                      <div className="mt-3">
-                        <span className="text-2xl font-bold text-secondary">
-                          {templates.filter(t => t.category === 'story').length}
-                        </span>
-                        <p className="text-sm text-muted-foreground">templates disponibles</p>
-                      </div>
-                    </div>
-                    
-                    <div className="text-center p-6 bg-card rounded-xl border border-border shadow-sm">
-                      <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <div className="text-2xl">⚡</div>
-                      </div>
-                      <h3 className="text-lg font-semibold text-foreground mb-2">Génération Rapide</h3>
-                      <p className="text-muted-foreground text-sm">Interface intuitive et génération en temps réel</p>
-                      <div className="mt-3">
-                        <span className="text-2xl font-bold text-accent">∞</span>
-                        <p className="text-sm text-muted-foreground">possibilités</p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="text-center">
-                    <p className="text-muted-foreground mb-4">
-                      Commencez par explorer notre bibliothèque de templates professionnels
-                    </p>
-                    <div className="inline-flex items-center space-x-2 text-primary font-medium">
-                      <span>Utilisez la sidebar pour naviguer</span>
-                      <div className="animate-bounce">👉</div>
-                    </div>
-                  </div>
-                </div>
+        </div>
+      </header>
+      
+      {/* Hero Section */}
+      <div className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-secondary/10 to-accent/10" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+          <div className="text-center">
+            <div className="w-32 h-32 flex items-center justify-center mx-auto mb-8">
+              <Image src="/logo.svg" alt="Sterenova" width={128} height={128} />
+            </div>
+            
+            <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-6">
+              Bienvenue sur <span className="text-primary">Sterenova</span>
+            </h1>
+            
+            <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
+              Créez des templates SVG professionnels en quelques clics.
+              Interface intuitive et génération en temps réel pour vos besoins créatifs.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/editor">
+                <Button size="lg" className="text-lg px-8 py-4">
+                  <Sparkles className="w-5 h-5 mr-2" />
+                  Commencer à créer
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Button>
+              </Link>
+              <Button variant="outline" size="lg" className="text-lg px-8 py-4">
+                <Palette className="w-5 h-5 mr-2" />
+                Voir les templates
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Features Section */}
+      <div className="py-24 bg-card/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+              Pourquoi choisir Sterenova ?
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Une solution complète pour tous vos besoins de création graphique
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="text-center p-8 bg-background rounded-2xl border border-border shadow-lg">
+              <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                <div className="text-3xl">📱</div>
+              </div>
+              <h3 className="text-2xl font-semibold text-foreground mb-4">Posts Instagram</h3>
+              <p className="text-muted-foreground text-lg mb-6">
+                Templates carrés optimisés pour les réseaux sociaux avec des designs modernes et professionnels
+              </p>
+              <div className="text-center">
+                <span className="text-4xl font-bold text-primary block">
+                  {postTemplates.length}
+                </span>
+                <p className="text-muted-foreground">templates disponibles</p>
               </div>
             </div>
-          )}
+            
+            <div className="text-center p-8 bg-background rounded-2xl border border-border shadow-lg">
+              <div className="w-20 h-20 bg-secondary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                <div className="text-3xl">📖</div>
+              </div>
+              <h3 className="text-2xl font-semibold text-foreground mb-4">Stories & Reels</h3>
+              <p className="text-muted-foreground text-lg mb-6">
+                Templates verticaux parfaits pour les stories, reels et contenus vidéo courts
+              </p>
+              <div className="text-center">
+                <span className="text-4xl font-bold text-secondary block">
+                  {storyTemplates.length}
+                </span>
+                <p className="text-muted-foreground">templates disponibles</p>
+              </div>
+            </div>
+            
+            <div className="text-center p-8 bg-background rounded-2xl border border-border shadow-lg">
+              <div className="w-20 h-20 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                <div className="text-3xl">⚡</div>
+              </div>
+              <h3 className="text-2xl font-semibold text-foreground mb-4">Génération Rapide</h3>
+              <p className="text-muted-foreground text-lg mb-6">
+                Interface intuitive et génération en temps réel pour une productivité maximale
+              </p>
+              <div className="text-center">
+                <span className="text-4xl font-bold text-accent block">∞</span>
+                <p className="text-muted-foreground">possibilités</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* CTA Section */}
+      <div className="py-24">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
+            Prêt à créer votre premier template ?
+          </h2>
+          <p className="text-xl text-muted-foreground mb-8">
+            Rejoignez des milliers de créateurs qui utilisent déjà Sterenova pour leurs projets
+          </p>
+          <Link href="/editor">
+            <Button size="lg" className="text-lg px-8 py-4">
+              <Star className="w-5 h-5 mr-2" />
+              Commencer maintenant
+              <ArrowRight className="w-5 h-5 ml-2" />
+            </Button>
+          </Link>
         </div>
       </div>
     </div>
