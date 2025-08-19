@@ -8,6 +8,7 @@ import { TemplateInfo } from '@/types/api';
 import { apiService } from '@/services/api';
 import { Toaster } from 'sonner';
 import { ArrowRight, Sparkles, Palette, Download, Star, Menu } from 'lucide-react';
+import { APP_NAME, APP_DESCRIPTION, APP_METADATA } from '@/config/app';
 
 export default function HomePage() {
   const [templates, setTemplates] = useState<TemplateInfo[]>([]);
@@ -36,7 +37,7 @@ export default function HomePage() {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary mx-auto mb-6"></div>
-          <h2 className="text-2xl font-bold text-foreground mb-2">Chargement de Sterenova</h2>
+          <h2 className="text-2xl font-bold text-foreground mb-2">Chargement de {APP_NAME}</h2>
           <p className="text-muted-foreground">Préparation de votre bibliothèque de templates...</p>
         </div>
       </div>
@@ -75,8 +76,8 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
-              <Image src="/logo.svg" alt="Sterenova" width={32} height={32} />
-              <span className="text-xl font-bold text-foreground">Sterenova</span>
+              <Image src="/logo.svg" alt={APP_NAME} width={32} height={32} />
+              <span className="text-xl font-bold text-foreground">{APP_NAME}</span>
             </div>
             <div className="flex items-center space-x-4">
               <Link href="/editor">
@@ -96,11 +97,11 @@ export default function HomePage() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
           <div className="text-center">
             <div className="w-32 h-32 flex items-center justify-center mx-auto mb-8">
-              <Image src="/logo.svg" alt="Sterenova" width={128} height={128} />
+              <Image src="/logo.svg" alt={APP_NAME} width={128} height={128} />
             </div>
             
             <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-6">
-              Bienvenue sur <span className="text-primary">Sterenova</span>
+              Bienvenue sur <span className="text-primary">{APP_NAME}</span>
             </h1>
             
             <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
@@ -130,7 +131,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Pourquoi choisir Sterenova ?
+              Pourquoi choisir {APP_NAME} ?
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Une solution complète pour tous vos besoins de création graphique
@@ -194,7 +195,7 @@ export default function HomePage() {
             Prêt à créer votre premier template ?
           </h2>
           <p className="text-xl text-muted-foreground mb-8">
-            Rejoignez des milliers de créateurs qui utilisent déjà Sterenova pour leurs projets
+            Rejoignez des milliers de créateurs qui utilisent déjà {APP_NAME} pour leurs projets
           </p>
           <Link href="/editor">
             <Button size="lg" className="text-lg px-8 py-4">

@@ -10,6 +10,7 @@ import { Toaster } from 'sonner';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Loader2, AlertCircle, Palette, Sparkles, ArrowRight, RotateCcw, RefreshCw } from 'lucide-react';
+import { APP_LABELS } from '@/config/app';
 
 export default function EditorPage() {
   const [templates, setTemplates] = useState<TemplateInfo[]>([]);
@@ -53,7 +54,7 @@ export default function EditorPage() {
           <CardHeader className="text-center">
             <CardTitle className="flex items-center justify-center space-x-2">
               <Loader2 className="w-6 h-6 animate-spin text-primary" />
-              <span>Chargement de Sterenova</span>
+              <span>Chargement de {APP_LABELS.welcome.split(' ').slice(-2).join(' ')}</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="text-center space-y-4">
@@ -137,7 +138,7 @@ export default function EditorPage() {
                   <CardHeader>
                     <CardTitle className="flex items-center justify-center space-x-2 text-3xl">
                       <Palette className="w-8 h-8 text-primary" />
-                      <span>Bienvenue dans l&apos;Éditeur</span>
+                      <span>{APP_LABELS.welcome}</span>
                     </CardTitle>
                   </CardHeader>
                   <CardContent>

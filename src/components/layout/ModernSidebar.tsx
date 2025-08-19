@@ -13,6 +13,7 @@ import {
   FileText,
 } from 'lucide-react';
 import { TemplateInfo } from '@/types/api';
+import { APP_LABELS } from '@/config/app';
 
 interface ModernSidebarProps {
   templates: TemplateInfo[];
@@ -31,7 +32,7 @@ export function ModernSidebar({ templates, selectedTemplate, onTemplateSelect }:
           <div className="text-center">
             <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary mx-auto mb-4"></div>
             <p className="text-muted-foreground font-medium">Chargement des templates...</p>
-            <p className="text-sm text-muted-foreground/70 mt-2">Préparation de votre bibliothèque</p>
+            <p className="text-sm text-muted-foreground/70 mt-2">Préparation de votre bibliothèque {APP_LABELS.templates.toLowerCase()}</p>
           </div>
         </div>
       </div>

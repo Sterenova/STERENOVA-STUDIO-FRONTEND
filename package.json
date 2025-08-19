@@ -1,7 +1,7 @@
 {
-  "name": "sterenova-frontend",
+  "name": "sterenova-studio-frontend",
   "version": "1.0.0",
-  "description": "Interface moderne et responsive pour la génération de templates SVG Sterenova",
+  "description": "Interface moderne et responsive pour la génération de templates SVG pour Sterenova Event",
   "private": true,
   "scripts": {
     "dev": "next dev -p 3001",
@@ -11,8 +11,8 @@
     "type-check": "tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "docker:build": "docker build -t sterenova-frontend .",
-    "docker:run": "docker run -p 3001:3000 sterenova-frontend",
+    "docker:build": "docker build -t sterenova-studio-frontend .",
+    "docker:run": "docker run -p 3001:3000 sterenova-studio-frontend",
     "docker:compose": "docker-compose up --build",
     "docker:compose:down": "docker-compose down",
     "clean": "rm -rf .next out node_modules",

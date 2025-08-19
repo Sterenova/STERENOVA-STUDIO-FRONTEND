@@ -21,6 +21,7 @@ import {
   Home
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { APP_NAME, APP_DESCRIPTION } from '@/config/app';
 
 interface ModernHeaderProps {
   onMenuToggle: () => void;
@@ -72,12 +73,12 @@ export function ModernHeader({ onMenuToggle, isMenuOpen }: ModernHeaderProps) {
               <div className="flex items-center space-x-3">
                 <div className="relative h-8 w-8">
                   <Link href="/">
-                    <Image src="/logo.svg" alt="Sterenova" width={32} height={32} />
+                    <Image src="/logo.svg" alt={APP_NAME} width={32} height={32} />
                   </Link>
                 </div>
                 <div className="hidden sm:block">
-                  <h1 className="text-xl font-bold text-foreground">Sterenova</h1>
-                  <p className="text-xs text-muted-foreground">Générateur de Templates</p>
+                  <h1 className="text-xl font-bold text-foreground">{APP_NAME}</h1>
+                  <p className="text-xs text-muted-foreground">{APP_DESCRIPTION}</p>
                 </div>
               </div>
             </div>

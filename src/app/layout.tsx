@@ -3,16 +3,17 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from '@/components/providers/ThemeProvider';
 import { UserProvider } from '@/contexts/UserContext';
+import { APP_METADATA } from '@/config/app';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Sterenova - Générateur de Templates SVG',
-  description: 'Interface moderne et responsive pour la génération de templates SVG professionnels',
-  keywords: ['sterenova', 'templates', 'svg', 'generation', 'design', 'graphics'],
-  authors: [{ name: 'Sterenova Team' }],
-  creator: 'Sterenova',
-  publisher: 'Sterenova',
+  title: APP_METADATA.title,
+  description: APP_METADATA.description,
+  keywords: [...APP_METADATA.keywords],
+  authors: [{ name: APP_METADATA.author }],
+  creator: APP_METADATA.company,
+  publisher: APP_METADATA.company,
   formatDetection: {
     email: false,
     address: false,
@@ -20,17 +21,17 @@ export const metadata: Metadata = {
   },
   metadataBase: new URL('http://localhost:3001'),
   openGraph: {
-    title: 'Sterenova - Générateur de Templates SVG',
-    description: 'Interface moderne et responsive pour la génération de templates SVG professionnels',
+    title: APP_METADATA.title,
+    description: APP_METADATA.description,
     url: 'http://localhost:3001',
-    siteName: 'Sterenova',
+    siteName: APP_METADATA.company,
     locale: 'fr_FR',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Sterenova - Générateur de Templates SVG',
-    description: 'Interface moderne et responsive pour la génération de templates SVG professionnels',
+    title: APP_METADATA.title,
+    description: APP_METADATA.description,
   },
   robots: {
     index: true,

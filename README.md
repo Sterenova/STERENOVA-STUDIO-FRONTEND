@@ -1,196 +1,158 @@
-# 🎨 Sterenova Frontend - Interface de Génération de Templates
+# Sterenova Studio Frontend
 
-## 🚀 Démarrage Rapide
+Interface Next.js moderne pour la génération de templates SVG Sterenova Studio.
 
-### Prérequis
-- Node.js 18+ 
-- npm ou yarn
-- Backend Sterenova en cours d'exécution sur `http://localhost:3000`
+## 🚀 Démarrage rapide
 
-### Installation
+### Développement local
+
 ```bash
 # Installer les dépendances
 npm install
 
-# Créer le fichier .env.local
-echo "NEXT_PUBLIC_API_URL=http://localhost:3000/api" > .env.local
-
-# Démarrer le serveur de développement
+# Démarrer en mode développement
 npm run dev
+
+# L'interface sera disponible sur http://localhost:3001
 ```
 
-L'application sera accessible sur `http://localhost:3001`
-
-## 🏗️ Architecture
-
-### Structure des Composants
-```
-src/
-├── components/
-│   ├── layout/
-│   │   ├── Sidebar.tsx          # Sidebar principale (desktop)
-│   │   └── MobileSidebar.tsx    # Sidebar mobile responsive
-│   └── editor/
-│       └── TemplateEditor.tsx   # Éditeur de templates
-├── services/
-│   └── api.ts                   # Service API pour communiquer avec le backend
-├── types/
-│   └── api.ts                   # Types TypeScript pour l'API
-└── app/
-    └── page.tsx                 # Page principale
-```
-
-### Composants Principaux
-
-#### **Sidebar** (`Sidebar.tsx`)
-- Navigation entre templates (Posts/Stories)
-- Recherche de templates par nom ou tags
-- Filtrage par catégorie
-- Actions rapides (Palette, Téléchargement, Configuration)
-
-#### **TemplateEditor** (`TemplateEditor.tsx`)
-- Formulaire dynamique basé sur les placeholders du template
-- Aperçu en temps réel du SVG généré
-- Gestion des erreurs et validation
-- Boutons d'action (Générer, Reset, Télécharger, Copier le code)
-
-#### **MobileSidebar** (`MobileSidebar.tsx`)
-- Version mobile de la sidebar utilisant Sheet
-- Navigation tactile optimisée
-- Fermeture automatique après sélection
-
-## 🎯 Fonctionnalités
-
-### **Gestion des Templates**
-- ✅ Liste complète des templates disponibles
-- ✅ Filtrage par catégorie (Posts/Stories)
-- ✅ Recherche intelligente par nom et tags
-- ✅ Métadonnées complètes (dimensions, descriptions, tags)
-
-### **Édition de Templates**
-- ✅ Formulaire dynamique basé sur les placeholders
-- ✅ Valeurs par défaut automatiques
-- ✅ Validation des champs requis
-- ✅ Aperçu en temps réel
-
-### **Génération et Export**
-- ✅ Génération de SVG personnalisés
-- ✅ Téléchargement des fichiers générés
-- ✅ Copie du code SVG dans le presse-papiers
-- ✅ Gestion des erreurs de génération
-
-### **Interface Responsive**
-- ✅ Design adaptatif (desktop, tablette, mobile)
-- ✅ Sidebar mobile avec Sheet
-- ✅ Layout flexible selon la taille d'écran
-- ✅ Navigation tactile optimisée
-
-## 🔧 Configuration
-
-### Variables d'Environnement
-Créez un fichier `.env.local` à la racine du projet :
+### Build et production
 
 ```bash
-# URL de l'API backend
-NEXT_PUBLIC_API_URL=http://localhost:3000/api
-
-# Nom de l'application
-NEXT_PUBLIC_APP_NAME=Sterenova
-
-# Version de l'application
-NEXT_PUBLIC_APP_VERSION=1.0.0
-```
-
-### Personnalisation des Thèmes
-L'application utilise shadcn/ui avec Tailwind CSS. Modifiez les variables CSS dans `src/app/globals.css` pour personnaliser les couleurs et thèmes.
-
-## 📱 Utilisation
-
-### **1. Sélection d'un Template**
-- Parcourez la sidebar pour voir tous les templates disponibles
-- Utilisez les onglets pour filtrer par catégorie (Posts/Stories)
-- Recherchez un template spécifique avec la barre de recherche
-- Cliquez sur un template pour le sélectionner
-
-### **2. Édition du Template**
-- Remplissez les champs du formulaire selon vos besoins
-- Les champs requis sont marqués avec un badge rouge
-- Utilisez les valeurs par défaut ou personnalisez complètement
-- Cliquez sur "Générer" pour créer le SVG
-
-### **3. Aperçu et Export**
-- Visualisez le résultat dans le panneau de droite
-- Utilisez "Copier le code" pour récupérer le SVG
-- Cliquez sur "Télécharger" pour sauvegarder le fichier
-- Utilisez "Reset" pour revenir aux valeurs par défaut
-
-## 🎨 Personnalisation
-
-### Ajout de Nouveaux Composants
-```bash
-# Installer un nouveau composant shadcn/ui
-npx shadcn@latest add [component-name]
-
-# Exemple
-npx shadcn@latest add tooltip
-```
-
-### Modification des Styles
-- Utilisez les classes Tailwind CSS pour personnaliser l'apparence
-- Modifiez les composants dans `src/components/ui/`
-- Ajustez les variables CSS dans `src/app/globals.css`
-
-## 🚀 Déploiement
-
-### Build de Production
-```bash
-# Construire l'application
+# Build de production
 npm run build
 
 # Démarrer en mode production
-npm start
+npm run start
 ```
 
-### Variables d'Environnement de Production
+## 🔄 CI/CD et Docker Hub
+
+### Configuration requise
+
+Dans votre repo GitHub → Settings → Secrets and variables → Actions, ajoutez :
+
+```
+DOCKER_USERNAME=votre_username_docker_hub
+DOCKER_TOKEN=votre_access_token_docker_hub
+```
+
+### Workflow automatique
+
+- **Push sur main/develop** → Build et push automatique sur Docker Hub
+- **Tags** → Build et push avec version spécifique
+- **Images générées** : `sterenova/sterenova-frontend:latest`
+
+### Créer une release
+
 ```bash
-# URL de l'API en production
-NEXT_PUBLIC_API_URL=https://api.votre-domaine.com/api
+# Créer une nouvelle version
+./release.sh v1.0.0 "Description de la release"
+
+# La CI fera automatiquement :
+# 1. Build de l'image Docker
+# 2. Push sur Docker Hub avec le tag v1.0.0
+# 3. Coolify détectera et redéploiera
 ```
 
-## 🔍 Dépannage
+## 📦 Images Docker Hub
 
-### Problèmes Courants
+### Tags disponibles
+- `latest` - Dernière version de la branche main
+- `v1.0.0` - Version spécifique
+- `main-<sha>` - Version de la branche main
+- `develop-<sha>` - Version de la branche develop
 
-#### **L'API ne répond pas**
-- Vérifiez que le backend est démarré sur `http://localhost:3000`
-- Vérifiez la variable `NEXT_PUBLIC_API_URL` dans `.env.local`
-- Consultez la console du navigateur pour les erreurs
+### Utilisation avec Coolify
 
-#### **Templates non chargés**
-- Vérifiez la connexion à l'API
-- Vérifiez que le backend a bien démarré
-- Consultez les logs du backend
+Dans Coolify, configurez l'application avec :
+- **Image** : `sterenova/sterenova-frontend:latest`
+- **Port** : 3001
+- **Variables d'environnement** : Voir `env.local`
 
-#### **Erreurs de génération**
-- Vérifiez que tous les champs requis sont remplis
-- Consultez la réponse de l'API dans la console
-- Vérifiez les logs du backend
+## 🔧 Configuration
 
-## 📚 Ressources
+### Variables d'environnement
 
-- [Documentation Next.js](https://nextjs.org/docs)
-- [Documentation Tailwind CSS](https://tailwindcss.com/docs)
-- [Documentation shadcn/ui](https://ui.shadcn.com/)
-- [Documentation de l'API Backend](../backend/README.md)
+#### Développement (`env.local`)
+```
+NODE_ENV=development
+NEXT_PUBLIC_API_URL=http://localhost:3000/api
+```
 
-## 🤝 Contribution
+#### Production (Coolify)
+```
+NODE_ENV=production
+NEXT_PUBLIC_API_URL=https://sterenova-backend.votre-domaine.com/api
+```
 
-Pour contribuer au développement :
-1. Créez une branche pour votre fonctionnalité
-2. Développez et testez localement
-3. Soumettez une pull request
-4. Assurez-vous que tous les tests passent
+## 🎨 Interface utilisateur
+
+### Fonctionnalités
+- **Éditeur de templates** : Interface moderne et intuitive
+- **Prévisualisation** : Aperçu en temps réel des templates
+- **Gestion des favoris** : Sauvegarde des templates préférés
+- **Historique** : Suivi des générations
+- **Responsive** : Compatible mobile et desktop
+
+### Technologies
+- **Framework** : Next.js 14 (React)
+- **Styling** : Tailwind CSS
+- **Composants** : Shadcn/ui
+- **État** : React Context + Hooks
+- **API** : Fetch avec gestion d'erreurs
+
+## 🔍 Monitoring
+
+### Health Check
+```bash
+curl http://localhost:3001
+# Réponse: Page HTML de l'application
+```
+
+### Logs
+- **Développement** : Console du navigateur
+- **Production** : Coolify logs
+
+## 🚨 Dépannage
+
+### Problèmes courants
+1. **Port déjà utilisé** → Vérifiez qu'aucun autre service n'utilise le port 3001
+2. **API non accessible** → Vérifiez que le backend fonctionne
+3. **Variables d'environnement** → Vérifiez le fichier `env.local`
+
+### Logs détaillés
+```bash
+# Mode debug
+DEBUG=* npm run dev
+```
+
+### Vérification de l'API
+```bash
+# Tester la connexion avec le backend
+curl http://localhost:3000/api/health
+```
+
+## 🏗️ Architecture
+
+### Structure des composants
+```
+src/
+├── app/           # Pages Next.js (App Router)
+├── components/    # Composants React réutilisables
+├── contexts/      # Contextes React (User, etc.)
+├── hooks/         # Hooks personnalisés
+├── lib/           # Utilitaires et configurations
+├── services/      # Services API et externes
+└── types/         # Types TypeScript
+```
+
+### Composants principaux
+- **ModernTemplateEditor** : Éditeur principal des templates
+- **ModernSidebar** : Navigation et sélection des templates
+- **ModernHeader** : En-tête avec navigation
+- **DataTable** : Affichage tabulaire des données
 
 ---
 
-**Sterenova Frontend** - Interface moderne et responsive pour la génération de templates SVG 🎨
+**🎯 Ce repo Sterenova Studio est configuré pour un déploiement automatique avec Coolify !**
