@@ -1,32 +1,24 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Separator } from '@/components/ui/separator';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+
+
 
 import { Textarea } from '@/components/ui/textarea';
 import {
   Download,
-  Copy,
-  Palette,
   Settings,
   Sparkles,
-  CheckCircle,
-  AlertCircle,
   Loader2,
   Eye,
   EyeOff,
   RefreshCw,
   FileImage,
-  FileVideo,
-  Layers,
-  Code,
   Info,
   Zap,
   Maximize2,
@@ -98,6 +90,45 @@ export function ModernTemplateEditor({ template }: ModernTemplateEditorProps) {
   const previewSize = getPreviewSize();
   const modalSize = getModalSize();
 
+  const checkIfFavorite = useCallback(async () => {
+    if (!user) return;
+    
+    try {
+      const result = await apiService.isTemplateFavorite(user.id, template.name);
+      setIsFavorite(result.isFavorite);
+    } catch (error) {
+      console.error('Erreur lors de la vérification des favoris:', error);
+    }
+  }, [user, template.name]);
+
+  const generateTemplateWithData = useCallback(async (data: Record<string, string>) => {
+    setIsGenerating(true);
+    try {
+      const svg = await apiService.generateTemplate(template.category, template.name, data);
+      setGeneratedSvg(svg);
+      
+      // Sauvegarder l'historique des téléchargements
+      if (user) {
+        try {
+          await apiService.createDownloadHistory({
+            templateName: template.name,
+            templateCategory: template.category,
+            templateParameters: data,
+            userId: user.id,
+            fileFormat: 'svg'
+          });
+        } catch (error) {
+          console.error('Erreur lors de la sauvegarde de l\'historique:', error);
+        }
+      }
+    } catch (error) {
+      console.error('Erreur lors de la génération:', error);
+      toast.error('Erreur lors de la génération du template');
+    } finally {
+      setIsGenerating(false);
+    }
+  }, [user, template.category, template.name]);
+
   useEffect(() => {
     // Initialiser les valeurs par défaut
     const defaults: Record<string, string> = {};
@@ -117,18 +148,7 @@ export function ModernTemplateEditor({ template }: ModernTemplateEditorProps) {
     if (user) {
       checkIfFavorite();
     }
-  }, [template, user]);
-
-  const checkIfFavorite = async () => {
-    if (!user) return;
-    
-    try {
-      const result = await apiService.isTemplateFavorite(user.id, template.name);
-      setIsFavorite(result.isFavorite);
-    } catch (error) {
-      console.error('Erreur lors de la vérification des favoris:', error);
-    }
-  };
+  }, [template, user, generateTemplateWithData, checkIfFavorite]);
 
   const handleAddToFavorites = async () => {
     if (!user) {
@@ -171,34 +191,6 @@ export function ModernTemplateEditor({ template }: ModernTemplateEditorProps) {
     } catch (error) {
       console.error('Erreur lors de la suppression des favoris:', error);
       toast.error('Erreur lors de la suppression des favoris');
-    }
-  };
-
-  const generateTemplateWithData = async (data: Record<string, string>) => {
-    setIsGenerating(true);
-    try {
-      const svg = await apiService.generateTemplate(template.category, template.name, data);
-      setGeneratedSvg(svg);
-      
-      // Sauvegarder l'historique des téléchargements
-      if (user) {
-        try {
-          await apiService.createDownloadHistory({
-            templateName: template.name,
-            templateCategory: template.category,
-            templateParameters: data,
-            userId: user.id,
-            fileFormat: 'svg'
-          });
-        } catch (error) {
-          console.error('Erreur lors de la sauvegarde de l\'historique:', error);
-        }
-      }
-    } catch (error) {
-      console.error('Erreur lors de la génération:', error);
-      toast.error('Erreur lors de la génération du template');
-    } finally {
-      setIsGenerating(false);
     }
   };
 
@@ -279,20 +271,7 @@ export function ModernTemplateEditor({ template }: ModernTemplateEditorProps) {
     }
   };
 
-  const handleCopySvg = async () => {
-    if (!generatedSvg) {
-      toast.error('Générez d\'abord le template');
-      return;
-    }
 
-    try {
-      await navigator.clipboard.writeText(generatedSvg);
-      toast.success('Code SVG copié dans le presse-papiers');
-    } catch (error) {
-      console.error('Erreur lors de la copie:', error);
-      toast.error('Erreur lors de la copie');
-    }
-  };
 
   const handleReset = () => {
     const defaults: Record<string, string> = {};

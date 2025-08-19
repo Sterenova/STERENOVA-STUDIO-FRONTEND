@@ -69,7 +69,7 @@ export default function TestCSSPage() {
           <CardHeader>
             <CardTitle>Test des Composants shadcn</CardTitle>
             <CardDescription>
-              Vérification que tous les composants UI s'affichent correctement
+              Vérification que tous les composants UI s&apos;affichent correctement
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useUser } from '@/contexts/UserContext';
 import { DownloadHistory, DownloadHistoryStats } from '@/types/api';
 import { apiService } from '@/services/api';
@@ -27,13 +27,7 @@ export default function HistoryPage() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('recent');
 
-  useEffect(() => {
-    if (user) {
-      fetchData();
-    }
-  }, [user]);
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     if (!user) return;
     
     try {
@@ -51,7 +45,13 @@ export default function HistoryPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
+
+  useEffect(() => {
+    if (user) {
+      fetchData();
+    }
+  }, [user, fetchData]);
 
   const handleCleanup = async () => {
     if (!user) return;
@@ -81,7 +81,7 @@ export default function HistoryPage() {
     if (!bytes) return 'N/A';
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(1024));
-    return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + ' ' + sizes[i];
+    return `${Math.round(bytes / Math.pow(1024, i) * 100) / 100} ${sizes[i]}`;
   };
 
   const formatDate = (date: Date) => {
@@ -117,7 +117,7 @@ export default function HistoryPage() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">Historique des Téléchargements</h1>
           <p className="text-muted-foreground">
-            Suivez tous vos téléchargements de templates et analysez vos statistiques d'utilisation
+            Suivez tous vos téléchargements de templates et analysez vos statistiques d&apos;utilisation
           </p>
         </div>
 
@@ -215,7 +215,7 @@ export default function HistoryPage() {
                 {loading ? (
                   <div className="text-center py-8">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-                    <p className="text-muted-foreground">Chargement de l'historique...</p>
+                    <p className="text-muted-foreground">Chargement de l&apos;historique...</p>
                   </div>
                 ) : downloadHistory.length === 0 ? (
                   <div className="text-center py-8">

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useUser } from '@/contexts/UserContext';
 import { SvgSetting } from '@/types/api';
 import { apiService } from '@/services/api';
@@ -47,13 +47,7 @@ export default function SettingsPage() {
     priority: 0
   });
 
-  useEffect(() => {
-    if (user) {
-      fetchData();
-    }
-  }, [user]);
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     if (!user) return;
     
     try {
@@ -73,7 +67,13 @@ export default function SettingsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
+
+  useEffect(() => {
+    if (user) {
+      fetchData();
+    }
+  }, [user, fetchData]);
 
   const handleCreateSetting = async () => {
     if (!user || !newSettingData.settingKey || !newSettingData.settingName) return;
@@ -137,10 +137,10 @@ export default function SettingsPage() {
         setting.id,
         {
           settingName: setting.settingName,
-          description: setting.description,
+          description: setting.description || '',
           value: setting.value,
           valueType: setting.valueType,
-          category: setting.category,
+          category: setting.category || '',
           priority: setting.priority
         },
         user.id

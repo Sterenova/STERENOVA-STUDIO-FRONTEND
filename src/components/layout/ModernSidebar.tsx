@@ -7,7 +7,6 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import {
   Search,
-  Sparkles,
   Square,
   Star,
   FileText,
@@ -58,13 +57,7 @@ export function ModernSidebar({ templates, selectedTemplate, onTemplateSelect }:
     }
   };
 
-  const getCategoryColor = (category: string) => {
-    switch (category) {
-      case 'post': return 'bg-primary/10 text-primary border-primary/20';
-      case 'story': return 'bg-secondary/10 text-secondary border-secondary/20';
-      default: return 'bg-muted text-muted-foreground border-border';
-    }
-  };
+
 
   return (
     <TooltipProvider delayDuration={300}>

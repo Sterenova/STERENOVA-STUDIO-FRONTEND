@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useUser } from '@/contexts/UserContext';
 import { FavoriteTemplate, TemplateInfo } from '@/types/api';
 import { apiService } from '@/services/api';
@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { PageWrapper } from '@/components/layout/PageWrapper';
 import { 
@@ -21,7 +21,6 @@ import {
   Search,
   FileText,
   Image,
-  Settings,
   RefreshCw
 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -42,13 +41,7 @@ export default function FavoritesPage() {
     notes: ''
   });
 
-  useEffect(() => {
-    if (user) {
-      fetchData();
-    }
-  }, [user]);
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     if (!user) return;
     
     try {
@@ -66,7 +59,13 @@ export default function FavoritesPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
+
+  useEffect(() => {
+    if (user) {
+      fetchData();
+    }
+  }, [user, fetchData]);
 
   const handleAddToFavorites = async () => {
     if (!user || !newFavoriteData.templateName) return;
@@ -99,8 +98,8 @@ export default function FavoritesPage() {
       const updatedFavorite = await apiService.updateFavoriteTemplate(
         favorite.id,
         {
-          defaultParameters: favorite.defaultParameters,
-          notes: favorite.notes
+          defaultParameters: favorite.defaultParameters || {},
+          notes: favorite.notes || ''
         },
         user.id
       );

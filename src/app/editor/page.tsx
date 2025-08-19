@@ -9,7 +9,7 @@ import { apiService } from '@/services/api';
 import { Toaster } from 'sonner';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Loader2, AlertCircle, Palette, Sparkles, ArrowRight, RotateCcw, RefreshCw } from 'lucide-react';
+import { Loader2, AlertCircle, Palette, Sparkles, ArrowRight, RefreshCw } from 'lucide-react';
 import { APP_LABELS } from '@/config/app';
 
 export default function EditorPage() {

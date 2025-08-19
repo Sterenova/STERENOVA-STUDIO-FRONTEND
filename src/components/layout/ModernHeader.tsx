@@ -4,8 +4,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
 import { useTheme } from 'next-themes';
 import { 
   Menu, 
@@ -14,8 +12,6 @@ import {
   History, 
   Heart, 
   Settings, 
-  Bell,
-  User,
   Sun,
   Moon,
   Home

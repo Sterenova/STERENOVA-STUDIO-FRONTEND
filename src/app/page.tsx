@@ -7,8 +7,8 @@ import { Button } from '@/components/ui/button';
 import { TemplateInfo } from '@/types/api';
 import { apiService } from '@/services/api';
 import { Toaster } from 'sonner';
-import { ArrowRight, Sparkles, Palette, Download, Star, Menu } from 'lucide-react';
-import { APP_NAME, APP_DESCRIPTION, APP_METADATA } from '@/config/app';
+import { ArrowRight, Sparkles, Palette, Star } from 'lucide-react';
+import { APP_NAME } from '@/config/app';
 
 export default function HomePage() {
   const [templates, setTemplates] = useState<TemplateInfo[]>([]);
