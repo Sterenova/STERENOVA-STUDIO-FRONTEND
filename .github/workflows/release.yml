@@ -68,3 +68,4 @@ jobs:
             - `${{ steps.get_version.outputs.version }}` - Version majeure.mineure
           draft: false
           prerelease: false
+
